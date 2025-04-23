@@ -4,7 +4,11 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
 import Articles from './components/Articles';
-// Import other components...
+import ActionTips from './components/ActionTips';
+import Newsletter from './components/Newsletter';
+import Resources from './components/Resources';
+import Testimonials from './components/Testimonials';
+import Wildlife from './components/Wildlife';
 
 const App = () => {
   return (
@@ -14,7 +18,11 @@ const App = () => {
         <Hero />
         <Stats />
         <Articles />
-        {/* Add other components */}
+        <ActionTips />
+        <Newsletter />
+        <Resources />
+        <Testimonials />
+        <Wildlife />
       </div>
     </ThemeProvider>
   );
