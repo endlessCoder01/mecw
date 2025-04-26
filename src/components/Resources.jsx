@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Book, Video, Tool, Podcast } from 'lucide-react';
+import { Search, Book, Video, Wrench, Podcast } from 'lucide-react';
 
 const Resources = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +23,7 @@ const Resources = () => {
       title: 'Interactive Tools',
       description: 'Explore tools to visualize climate data and trends.',
       category: 'tools',
-      icon: Tool,
+      icon: Wrench, // Changed from Tool to Wrench
     },
     {
       title: 'Environmental Podcasts',
@@ -31,7 +31,7 @@ const Resources = () => {
       category: 'podcasts',
       icon: Podcast,
     },
-  ];
+];
 
   const filteredResources = resources.filter(resource => {
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
