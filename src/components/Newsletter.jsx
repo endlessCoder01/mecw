@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Check, X } from 'lucide-react';
+import { ENDPOINT } from './endpoint';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [status, setStatus] = useState('idle'); // idle, loading, sueccess, error
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('loading');
 
-    // Simulate API call
+    if (email.includes('@') && email.includes('.') && (email !== '' || email !== null)) {
+   try {
+    const response = await fetch(`${ENDPOINT}/mecw/api/emails`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email: email}),
+    });
+
+    const result = await response.json();
+    console.log(result);
+   } catch (error) {
+    console.error(error)
+   }
+  }
     setTimeout(() => {
-      if (email.includes('@')) {
+      if (email.includes('@') && email.includes('.')) {
         setStatus('success');
         setEmail('');
       } else {
         setStatus('error');
       }
     }, 1500);
+
+    setStatus('idle')
   };
 
   return (

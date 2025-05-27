@@ -14,18 +14,18 @@ const FAQ = () => {
       question: 'How can I get involved in local environmental initiatives?',
       answer: 'You can get involved by: joining local environmental groups, participating in community clean-up events, supporting local conservation projects, attending environmental workshops and seminars, and connecting with like-minded individuals through social media and community forums.',
     },
-    // {
-    //   question: 'What are some reliable sources for climate change information?',
-    //   answer: 'Reliable sources include: The Intergovernmental Panel on Climate Change (IPCC), NASA's Climate Change website, National Oceanic and Atmospheric Administration (NOAA), World Meteorological Organization (WMO), and peer-reviewed scientific journals.',
-    // },
-    // {
-    //   question: 'How does climate change affect wildlife?',
-    //   answer: 'Climate change affects wildlife through habitat loss, changes in temperature and weather patterns, disruption of migration patterns, food chain disturbances, and increased frequency of extreme weather events. Many species are struggling to adapt to these rapid changes.',
-    // },
-    // {
-    //   question: 'What is carbon offsetting?',
-    //   answer: 'Carbon offsetting involves compensating for your carbon emissions by funding projects that reduce greenhouse gas emissions elsewhere. This can include supporting renewable energy projects, forest conservation, or energy efficiency initiatives.',
-    // },
+    {
+      question: 'What are some reliable sources for climate change information?',
+      answer: `Reliable sources include: The Intergovernmental Panel on Climate Change (IPCC), NASA's Climate Change website, National Oceanic and Atmospheric Administration (NOAA), World Meteorological Organization (WMO), and peer-reviewed scientific journals.`,
+    },
+    {
+      question: 'How does climate change affect wildlife?',
+      answer: 'Climate change affects wildlife through habitat loss, changes in temperature and weather patterns, disruption of migration patterns, food chain disturbances, and increased frequency of extreme weather events. Many species are struggling to adapt to these rapid changes.',
+    },
+    {
+      question: 'What is carbon offsetting?',
+      answer: 'Carbon offsetting involves compensating for your carbon emissions by funding projects that reduce greenhouse gas emissions elsewhere. This can include supporting renewable energy projects, forest conservation, or energy efficiency initiatives.',
+    },
   ];
 
   return (

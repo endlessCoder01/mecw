@@ -1,48 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
-import Header from './Header';
+import { ENDPOINT } from './endpoint';
+import axios from 'axios';
 
-const Blog = () => {
+const NewsPosts = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [articles, setArticles] = useState([]);
   const postsPerPage = 6;
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: 'How to Reduce Your Carbon Footprint',
-      excerpt: 'Simple steps everyone can take to live more sustainably and reduce emissions.',
-      author: 'Emma Green',
-      date: '2024-02-15',
-      readTime: '5 min',
-      category: 'Sustainability',
-      image: 'https://picsum.photos/400/250?random=1',
-    },
-    {
-      id: 2,
-      title: 'The Impact of Plastic on Our Environment',
-      excerpt: 'Understanding the effects of plastic pollution and solutions to mitigate it.',
-      author: 'Michael Rivers',
-      date: '2024-02-14',
-      readTime: '7 min',
-      category: 'Pollution',
-      image: 'https://picsum.photos/400/250?random=2',
-    },
-    // Add more blog posts...
-  ];
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(`${ENDPOINT}/mecw/api/articles`);
+        setArticles(response.data);
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
 
-  const totalPages = Math.ceil(blogPosts.length / postsPerPage);
-  const currentPosts = blogPosts.slice(
+    fetchArticles();
+    const intervalId = setInterval(fetchArticles, 10000); 
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const totalPages = Math.ceil(articles.length / postsPerPage);
+  const currentPosts = articles.slice(
     (currentPage - 1) * postsPerPage,
     currentPage * postsPerPage
   );
 
   return (
-    <div >
-    <Header />
-    
-    <section className="py-16 bg-gray-50 dark:bg-gray-800" style={{paddingTop: 100}}>
-    
+    <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -65,7 +55,7 @@ const Blog = () => {
               >
                 <div className="relative">
                   <img
-                    src={post.image}
+                    src={`http://localhost:5000/mecw/images/${post.image}`} // Assuming images are served from this path
                     alt={post.title}
                     className="w-full h-48 object-cover"
                   />
@@ -79,7 +69,7 @@ const Blog = () => {
                     {post.title}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {post.excerpt}
+                    {post.content} {/* Displaying content directly */}
                   </p>
 
                   <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
@@ -89,11 +79,12 @@ const Blog = () => {
                     </div>
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {new Date(post.date).toLocaleDateString()}
+                      {new Date(post.created_at).toLocaleDateString()}
                     </div>
                     <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-1" />
-                      {post.readTime}
+                      {/* Assuming read time is not provided, replace with static value or logic */}
+                      {'5 min'}
                     </div>
                   </div>
 
@@ -158,8 +149,7 @@ const Blog = () => {
         </div>
       </div>
     </section>
-    </div>
   );
 };
 
-export default Blog;
+export default NewsPosts;

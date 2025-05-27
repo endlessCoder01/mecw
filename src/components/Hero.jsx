@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import backgroundImage from '../images/w4.jpg'; 
 
 const Hero = () => {
   return (
@@ -11,7 +12,7 @@ const Hero = () => {
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: 'url(https://picsum.photos/1920/1080)',
+          backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -35,8 +36,12 @@ const Hero = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="bg-primary hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg"
+          
         >
+          <a href='#start'>
           Get Started
+          </a>
+        
         </motion.button>
       </motion.div>
     </motion.div>

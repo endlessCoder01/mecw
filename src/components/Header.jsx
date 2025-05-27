@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import { Link } from 'react-router-dom'; // Import Link for routing
+import Logo from '../images/LOGO (2).png'; // Import the logo
 
 const Header = () => {
   const { isDark, setIsDark } = useTheme();
@@ -10,27 +12,32 @@ const Header = () => {
     <motion.header
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`fixed w-full z-50 ${
-        isDark ? 'bg-gray-900' : 'bg-primary'
-      } transition-colors duration-300`}
+      className={`fixed w-full z-50 ${isDark ? 'bg-gray-900' : 'bg-primary'} transition-colors duration-300`}
     >
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-5 flex justify-between items-center">
+        <motion.img
+          src={Logo} // Use the imported logo
+          alt="Logo"
+          className="h-10 w-auto" // Adjust height as needed
+        />
+        
         <motion.h1 
           whileHover={{ scale: 1.05 }}
           className="text-white text-2xl font-bold"
         >
-          Climate & Environment Hub
+          Ministry of Environment, Climate & Wildlife
         </motion.h1>
         
         <nav className="hidden md:flex space-x-6">
-          {['Home', 'Articles', 'Resources', 'Blog', 'Contact'].map((item) => (
-            <motion.a
-              key={item}
-              whileHover={{ scale: 1.1 }}
-              className="text-white hover:text-gray-200 cursor-pointer"
-            >
-              {item}
-            </motion.a>
+          {['Home', 'News', 'Resources', 'Blog', 'Contact'].map((item) => (
+            <motion.div key={item} whileHover={{ scale: 1.1 }}>
+              <Link
+                to={`/${item.toLowerCase()}`} // Create links dynamically (e.g. /home, /news)
+                className="text-white hover:text-gray-200 cursor-pointer"
+              >
+                {item}
+              </Link>
+            </motion.div>
           ))}
         </nav>
 

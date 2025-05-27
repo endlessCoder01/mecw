@@ -73,7 +73,7 @@ const ActionTips = () => {
               <h3 className="text-xl font-semibold mb-2 dark:text-white">
                 {tip.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600 dark:text-gray-300"  id='start'>
                 {tip.description}
               </p>
             </motion.div>

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+// Import local images
+import img1 from '../images/pangolin.png';
+import img2 from '../images/wd1.jpg';
+import img3 from '../images/wd2.jpg';
+import img4 from '../images/p2.jpg';
 
 const Wildlife = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,22 +15,22 @@ const Wildlife = () => {
     {
       title: 'Protecting Endangered Species',
       description: 'Learn how we can help species that are at risk of extinction.',
-      image: 'https://picsum.photos/400/300?random=1',
+      image: img1,
     },
     {
       title: 'Habitat Preservation',
       description: 'Discover the importance of preserving natural habitats.',
-      image: 'https://picsum.photos/400/300?random=2',
+      image: img2,
     },
     {
       title: 'Wildlife Corridors',
       description: 'The role of wildlife corridors in protecting animal migration.',
-      image: 'https://picsum.photos/400/300?random=3',
+      image: img3,
     },
     {
       title: 'Impact of Climate Change',
       description: 'How changing climates affect animal behavior and habitats.',
-      image: 'https://picsum.photos/400/300?random=4',
+      image: img4,
     },
   ];
 
@@ -33,9 +39,7 @@ const Wildlife = () => {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => 
-      prev === 0 ? wildlifeData.length - 1 : prev - 1
-    );
+    setCurrentIndex((prev) => (prev === 0 ? wildlifeData.length - 1 : prev - 1));
   };
 
   return (
@@ -54,7 +58,7 @@ const Wildlife = () => {
             <motion.div
               className="flex"
               animate={{ x: `-${currentIndex * 100}%` }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
               {wildlifeData.map((item, index) => (
                 <motion.div

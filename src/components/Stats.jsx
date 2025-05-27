@@ -11,6 +11,9 @@ const Stats = () => {
     { year: 2019, temp: 1.2 },
     { year: 2020, temp: 1.2 },
     { year: 2021, temp: 1.3 },
+    { year: 2022, temp: 1.4 },
+    { year: 2023, temp: 1.3 },
+    { year: 2024, temp: 1.5 },
   ];
 
   const stats = [
