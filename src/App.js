@@ -19,6 +19,8 @@ import CareersPage from './components/Careers';
 import DonatePage from './components/Donate';
 import ServicesPage from './components/Services';
 import ContactUsPage from './components/Contact';
+import GalleryPage from './components/gallery';
+import WeatherHistory from './components/climate';
 
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
                     <Route index element={<MainView />} />
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/home" element={<MainView />} />
+                     <Route path="/team" element={<GalleryPage />} />
                     <Route path="/faqs" element={<FAQ />} />
                     <Route path="/news" element={<NewsPosts />} />
                     <Route path="/copyrights" element={<CopyrightPage />} />
@@ -37,9 +40,10 @@ const App = () => {
                     <Route path="/donate" element={<DonatePage />} />
                     <Route path="/services" element={<ServicesPage />} />
                     <Route path="/contact" element={<ContactUsPage />} />
+                    <Route path="/climate" element={<WeatherHistory />} />
                     {/* <Route path="/search" element={<SearchPage />} />
                    
-                    <Route path="/AddTopUp" element={<AddTopUp />} />
+                   
                     <Route path="/Reports" element={<Reports />} />
                     <Route path="/broadcast" element={<Broadcast />} />
                     <Route path="/analytics" element={<Analytics />} />

@@ -22,7 +22,7 @@ const MainView = () => {
         <Articles />
         <ActionTips />
         <Newsletter />
-        <Resources />
+        {/* <Resources /> */}
         <Testimonials />
         <Wildlife />
         <Footer/>

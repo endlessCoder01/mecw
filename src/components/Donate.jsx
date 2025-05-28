@@ -1,41 +1,139 @@
 import React, { useState } from 'react';
-
-// Assuming your background image is in the "public/images" folder
+import { ENDPOINT } from './endpoint';
 import backgroundImage from '../images/w3.jpg';
+import Swal from 'sweetalert2';
 
 const DonatePage = () => {
   const [amount, setAmount] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Credit Card');
+  const [paymentMethod, setPaymentMethod] = useState('Eco Cash');
   const [contactNumber, setContactNumber] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false); // New state for verification
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('Thank you for your generous donation!');
-    // Add donation logic here (e.g., API call, payment gateway integration)
+    setIsProcessing(true);
+
+    const pay = await paymentGate();
+
+    if (pay) {
+      try {
+        const response = await fetch(`${ENDPOINT}/mecw/api/donate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, amount, paymentMethod, contactNumber }),
+        });
+
+        const result = await response.json();
+        if (result) {
+          setMessage('Thank you for your generous donation!');
+        } else {
+          showAlert('Donation failed', 'Please try again.');
+        }
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+        showAlert('Donation failed', 'Please try again.');
+      }
+    } else {
+      showAlert('Donation failed', 'Payment was not successful.');
+    }
+
+    setIsProcessing(false);
   };
 
-  const paymentGate = () => {
+  const showAlert = (title, text) => {
+    Swal.fire({
+      title,
+      text,
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+  };
 
-  }
+  const paymentGate = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${ENDPOINT}/pay`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, contactNumber, amount }),
+      });
 
-  const verify = () => {
-    
-  }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+      }
+
+      const result = await response.json();
+      await verifyPayment(result.pollUrl);
+      return true;
+    } catch (error) {
+      console.error("Payment request failed:", error);
+      setMessage("Payment request failed. Please try again.");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyPayment = async (pollUrl) => {
+    setIsVerifying(true); // Start verification
+    const interval = 15000; // Poll every 15 seconds
+    const timeout = 120000; // 2 minutes timeout
+    const startTime = Date.now();
+
+    const pollPaymentStatus = async () => {
+      try {
+        const response = await fetch(`${ENDPOINT}/check-payment-status?pollUrl=${pollUrl}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+        }
+
+        const result = await response.json();
+        if (result.status === 200) {
+          setMessage("Payment Verified!");
+          setIsVerifying(false); // End verification
+        } else if (result.status === 202) {
+          console.log("Payment is still pending.");
+        }
+      } catch (error) {
+        console.error("Payment verification failed:", error);
+      }
+    };
+
+    const polling = setInterval(() => {
+      if (Date.now() - startTime >= timeout) {
+        clearInterval(polling);
+        setMessage("Payment verification timed out.");
+        setIsVerifying(false); // End verification
+      } else {
+        pollPaymentStatus();
+      }
+    }, interval);
+  };
 
   return (
     <div 
-      className="donate-page min-h-screen bg-cover bg-center" 
+      className={`donate-page min-h-screen bg-cover bg-center ${isProcessing || isVerifying ? 'filter grayscale' : ''}`} 
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="overlay bg-black bg-opacity-50 min-h-screen flex justify-center items-center">
-        <div className="container bg-white bg-opacity-80 p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <div className={`container bg-white bg-opacity-80 p-8 rounded-lg shadow-lg max-w-2xl mx-auto ${isProcessing || isVerifying ? 'filter grayscale' : ''}`}>
           <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
             Donate to the Ministry of Environment, Climate, and Wildlife
           </h1>
@@ -91,16 +189,12 @@ const DonatePage = () => {
                   onChange={(e) => setPaymentMethod(e.target.value)} 
                   className="w-full p-3 mt-2 border border-gray-300 rounded-md"
                 >
-                  {/* <option value="Credit Card">Credit Card</option>
-                  <option value="PayPal">PayPal</option>
-                  <option value="Bank Transfer">Bank Transfer</option> */}
                   <option value="Eco Cash">Eco Cash</option>
-                  <option value="">Other Options Commig Soon......</option>
+                  <option value="">Other Options Coming Soon...</option>
                 </select>
               </div>
 
-              {/* Conditionally render fields based on selected payment method */}
-              {paymentMethod === 'Eco Cash' || paymentMethod === 'Inn Bucks' ? (
+              {paymentMethod === 'Eco Cash' ? (
                 <div>
                   <label htmlFor="contactNumber" className="block text-gray-700 font-semibold">Contact Number</label>
                   <input 
@@ -113,67 +207,15 @@ const DonatePage = () => {
                     required
                   />
                 </div>
-              // ) : paymentMethod === 'Bank Transfer' ? (
-              //   <div>
-              //     <label htmlFor="accountNumber" className="block text-gray-700 font-semibold">Account Number</label>
-              //     <input 
-              //       type="text" 
-              //       id="accountNumber" 
-              //       value={accountNumber} 
-              //       onChange={(e) => setAccountNumber(e.target.value)} 
-              //       className="w-full p-3 mt-2 border border-gray-300 rounded-md" 
-              //       placeholder="Enter the bank account number"
-              //       required
-              //     />
-              //   </div>
-              // ) : paymentMethod === 'Credit Card' ? (
-              //   <>
-              //     <div>
-              //       <label htmlFor="cardNumber" className="block text-gray-700 font-semibold">Card Number</label>
-              //       <input 
-              //         type="text" 
-              //         id="cardNumber" 
-              //         value={cardNumber} 
-              //         onChange={(e) => setCardNumber(e.target.value)} 
-              //         className="w-full p-3 mt-2 border border-gray-300 rounded-md" 
-              //         placeholder="Enter your card number"
-              //         required
-              //       />
-              //     </div>
-              //     <div className="flex space-x-4">
-              //       <div className="w-1/2">
-              //         <label htmlFor="expiryDate" className="block text-gray-700 font-semibold">Expiration Date</label>
-              //         <input 
-              //           type="month" 
-              //           id="expiryDate" 
-              //           value={expiryDate} 
-              //           onChange={(e) => setExpiryDate(e.target.value)} 
-              //           className="w-full p-3 mt-2 border border-gray-300 rounded-md"
-              //           required
-              //         />
-              //       </div>
-              //       <div className="w-1/2">
-              //         <label htmlFor="cvv" className="block text-gray-700 font-semibold">CVV</label>
-              //         <input 
-              //           type="text" 
-              //           id="cvv" 
-              //           value={cvv} 
-              //           onChange={(e) => setCvv(e.target.value)} 
-              //           className="w-full p-3 mt-2 border border-gray-300 rounded-md" 
-              //           placeholder="Enter CVV"
-              //           required
-              //         />
-              //       </div>
-              //     </div>
-              //   </>
               ) : null}
 
               <div className="text-center">
                 <button 
                   type="submit" 
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
+                  className={`bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 ${isProcessing || isVerifying ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={loading || isProcessing || isVerifying}
                 >
-                  Donate Now
+                  {loading ? 'Processing...' : 'Donate Now'}
                 </button>
               </div>
             </div>
