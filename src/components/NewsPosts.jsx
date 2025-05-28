@@ -37,26 +37,33 @@ const NewsPosts = () => {
   return (
     <section className='py-16 bg-gray-50 dark:bg-gray-800 relative'>
       <div className='container mx-auto px-4'>
-     <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  className="flex items-center justify-center mb-12 relative"
->
-  {/* Back arrow button aligned left */}
-  <button
-    onClick={() => navigate('/')}
-    aria-label="Back to home"
-    className="absolute left-0 text-primary dark:text-green-400 hover:text-green-600 flex items-center"
-  >
-    <ChevronLeft className="w-6 h-6" />
-  </button>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className='flex items-center justify-center mb-12 relative'
+        >
+          {/* Back arrow button aligned left */}
+          <button
+            onClick={() => navigate('/')}
+            aria-label='Back to home'
+            className='absolute left-0 text-primary dark:text-green-400 hover:text-green-600 flex items-center'
+          >
+            <ChevronLeft className='w-6 h-6' />
+          </button>
 
-  {/* Centered heading */}
-  <h2 className="text-3xl font-bold text-primary dark:text-green-400">
-    Latest Articles
-  </h2>
-</motion.div>
+          {/* Centered heading */}
+          <h2 className='text-3xl font-bold text-primary dark:text-green-400'>
+            Latest Articles
+          </h2>
 
+          {/* Login button aligned right */}
+          <button
+            onClick={() => (window.location.href = 'http://localhost:3000/')}
+            className='absolute right-0 text-primary dark:text-green-400 hover:text-green-600 font-semibold'
+          >
+            Upload
+          </button>
+        </motion.div>
 
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
           <AnimatePresence mode='wait'>
@@ -71,7 +78,10 @@ const NewsPosts = () => {
               >
                 <div className='relative'>
                   <img
-                    src={`http://localhost:5000/uploads/${post.image.replace(/\\/g, "/")}`}
+                    src={`http://localhost:5000/uploads/${post.image.replace(
+                      /\\/g,
+                      '/'
+                    )}`}
                     alt={post.title}
                     className='w-full h-48 object-cover'
                   />
@@ -100,8 +110,7 @@ const NewsPosts = () => {
                       {new Date(post.created_at).toLocaleDateString()}
                     </div>
                     <div className='flex items-center'>
-                      <Clock className='w-4 h-4 mr-1' />
-                      5 min
+                      <Clock className='w-4 h-4 mr-1' />5 min
                     </div>
                   </div>
 
@@ -155,7 +164,9 @@ const NewsPosts = () => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage(prev => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
             className={`p-2 rounded-full ${
               currentPage === totalPages
@@ -192,7 +203,10 @@ const NewsPosts = () => {
               </button>
 
               <img
-                src={`http://localhost:5000/uploads/${selectedPost.image.replace(/\\/g, "/")}`}
+                src={`http://localhost:5000/uploads/${selectedPost.image.replace(
+                  /\\/g,
+                  '/'
+                )}`}
                 alt={selectedPost.title}
                 className='w-full h-64 object-cover rounded-md mb-4'
               />
